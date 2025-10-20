@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('@/assets/fonts/Inter-VariableFont.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('@/assets/fonts/Inter-Italic-VariableFont.ttf') format('truetype');
+}
+
+:root {
+  font-family: 'Inter';
+  background-color: var(--bg);
+  color: var(--text);
+
+  --bg: #0f1419;
+  --bg-light: #161b22;
+  --bg-lighter: #2e3640;
+
+  --text: #e4e6eb;
+  --text-light: #b4b9c1;
+  --text-lighter: #7d8590;
+  --text-lightest: #545d6a;
+
+  --accent: #5b7a9e;
+  --accent-light: #7a6b9e;
+  --accent-lighter: #5b9299;
+
+  --success: #6b9e7a;
+  --pending: #b8956b;
+  --warning: #b86b6b;
+}
