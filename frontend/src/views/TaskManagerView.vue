@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen max-h-[1080px] h-full mt-32">
-    <div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+    <div class="max-w-2xl mx-auto bg-[var(--bg-light)] border border-[var(--bg-lighter)] p-6 rounded-2xl shadow-lg">
       <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">Task Manager</h1>
 
       <!-- Add Task Form -->
@@ -9,7 +9,7 @@
           v-model="newTask"
           type="text"
           placeholder="Enter a new task..."
-          class="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="flex-grow p-2 border border-[var(--bg-lighter)] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           type="submit"
@@ -63,14 +63,14 @@ const newTask = ref('')
 
 // Fetch all tasks
 async function fetchTasks() {
-  const res = await fetch('/api/v1/tasks')
+  const res = await fetch('/api/tasks')
   tasks.value = await res.json()
 }
 
 // Add new task
 async function addTask() {
   if (!newTask.value.trim()) return
-  const res = await fetch('/api/v1/tasks', {
+  const res = await fetch('/api/tasks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ title: newTask.value, completed: false }),
@@ -82,7 +82,7 @@ async function addTask() {
 
 // Update task
 async function updateTask(task: Task) {
-  await fetch(`/api/v1/tasks/${task.id}`, {
+  await fetch(`/api/tasks/${task.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(task),
@@ -91,7 +91,7 @@ async function updateTask(task: Task) {
 
 // Delete task
 async function deleteTask(id: number) {
-  await fetch(`/api/v1/tasks/${id}`, { method: 'DELETE' })
+  await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
   tasks.value = tasks.value.filter((t) => t.id !== id)
 }
 
