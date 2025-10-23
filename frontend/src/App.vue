@@ -8,7 +8,6 @@ import './assets/main.css'
   <div>
     <Navbar />
 
-    <!-- Page Content -->
     <main class="p-4">
       <RouterView />
     </main>

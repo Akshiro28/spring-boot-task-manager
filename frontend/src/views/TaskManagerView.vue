@@ -22,7 +22,7 @@
         <li
           v-for="task in tasks"
           :key="task.id"
-          class="mb-4 px-6 py-3 bg-[var(--bg-light)] rounded-2xl shadow-sm"
+          class="mb-4 px-6 py-3 bg-[var(--bg-light)] rounded-lg shadow-sm"
         >
           <div class="flex justify-between items-center">
             <div>
@@ -77,6 +77,10 @@
           <p v-else-if="task.description" class="mt-2 text-gray-600">
             {{ task.description }}
           </p>
+
+          <p v-if="task.createdAt" class="text-xs text-gray-400 mt-1">
+            Created at: {{ formatDate(task.createdAt) }}
+          </p>
         </li>
       </ul>
     </div>
@@ -91,6 +95,7 @@ type Task = {
   title: string
   completed: boolean
   description?: string
+  createdAt?: string
 }
 
 const tasks = ref<Task[]>([])
@@ -98,13 +103,16 @@ const newTask = ref('')
 const editingDescId = ref<number | null>(null)
 const tempDescription = ref('')
 
-// fetchTasks
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr)
+  return date.toLocaleString()
+}
+
 async function fetchTasks() {
   const res = await fetch('/api/tasks')
   tasks.value = await res.json()
 }
 
-// addTask
 async function addTask() {
   if (!newTask.value.trim()) return
   const res = await fetch('/api/tasks', {
@@ -117,7 +125,6 @@ async function addTask() {
   newTask.value = ''
 }
 
-// updateTask
 async function updateTask(task: Task) {
   await fetch(`/api/tasks/${task.id}`, {
     method: 'PUT',
@@ -153,7 +160,6 @@ async function saveTaskDescription(task: Task) {
   cancelEditingDesc()
 }
 
-// deleteTask
 async function deleteTask(id: number) {
   await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
   tasks.value = tasks.value.filter((t) => t.id !== id)

@@ -25,7 +25,6 @@ const toggleMenu = () => {
         <RouterLink to="/tasks" class="relative text-[var(--text)] transition after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[1px] after:w-0 after:bg-[var(--text-light)] after:transition-all after:duration-300 hover:after:w-full">Tasks</RouterLink>
       </div>
 
-      <!-- Mobile -->
       <div class="sm:hidden h-6">
         <button
           @click="toggleMenu"
@@ -57,7 +56,7 @@ const toggleMenu = () => {
       </div>
     </div>
 
-    <!-- Mobile -->
+    <!-- Mobile menu dropdown -->
     <div v-show="isMenuOpen" class="sm:hidden pt-2 pb-3 space-y-1 transition-all duration-300">
       <div class="flex flex-col space-y-2">
         <RouterLink to="/" class="relative py-1 w-fit text-[var(--text)] transition after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[1px] after:w-0 after:bg-[var(--text-light)] after:transition-all after:duration-300 hover:after:w-full">Home</RouterLink>

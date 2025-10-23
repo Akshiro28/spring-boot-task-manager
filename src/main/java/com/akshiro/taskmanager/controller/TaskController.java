@@ -16,25 +16,21 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
 
-    // READ all tasks
     @GetMapping
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
-    // READ one task by ID
     @GetMapping("/{id}")
     public Optional<Task> getTaskById(@PathVariable Long id) {
         return taskRepository.findById(id);
     }
 
-    // CREATE a new task
     @PostMapping
     public Task createTask(@RequestBody Task task) {
         return taskRepository.save(task);
     }
 
-    // UPDATE an existing task
     @PutMapping("/{id}")
     public Task updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
         return taskRepository.findById(id)
@@ -50,7 +46,6 @@ public class TaskController {
                 });
     }
 
-    // DELETE a task by ID
     @DeleteMapping("/{id}")
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
