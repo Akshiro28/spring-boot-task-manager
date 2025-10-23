@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen max-h-[1080px] h-full mt-32">
-    <div class="max-w-2xl mx-auto">
+    <div class="sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-6xl w-[calc(100%-32px)] mx-auto">
       <h1 class="text-3xl font-bold mb-6 text-center">Your tasks:</h1>
 
-      <form @submit.prevent="addTask" class="flex gap-2 mb-6">
+      <form @submit.prevent="addTask" class="flex gap-2 mb-6 max-w-2/3 mx-auto">
         <input
           v-model="newTask"
           type="text"
@@ -18,71 +18,76 @@
         </button>
       </form>
 
-      <ul>
-        <li
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
           v-for="task in tasks"
           :key="task.id"
-          class="mb-4 px-6 py-3 bg-[var(--bg-light)] rounded-lg shadow-sm"
+          class="flex flex-col justify-between bg-[var(--bg-light)] p-6 rounded-2xl shadow-md border border-[var(--bg-lighter)] hover:shadow-lg transition"
         >
-          <div class="flex justify-between items-center">
-            <div>
+          <p v-if="task.createdAt" class="text-xs text-gray-400 mb-2">
+            {{ formatDate(task.createdAt) }}
+          </p>
+
+          <div class="flex-1">
+            <div class="flex items-center mb-2">
               <input
                 type="checkbox"
                 v-model="task.completed"
                 @change="updateTask(task)"
                 class="mr-2 accent-blue-600"
               />
-              <span :class="{ 'line-through text-gray-500': task.completed }">
+              <h2
+                class="text-lg font-semibold break-words"
+                :class="{ 'line-through text-gray-500': task.completed }"
+              >
                 {{ task.title }}
-              </span>
+              </h2>
             </div>
-            <div class="flex gap-4">
-              <button
-                @click="startEditingDesc(task)"
-                class="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer"
-              >
-                Edit description
-              </button>
-              <button
-                @click="deleteTask(task.id)"
-                class="text-red-500 hover:text-red-700 font-semibold cursor-pointer"
-              >
-                Delete
-              </button>
+
+            <p v-if="task.description" class="text-gray-600 text-sm mt-1 break-words">
+              {{ task.description }}
+            </p>
+
+            <div v-if="editingDescId === task.id" class="mt-3">
+              <textarea
+                v-model="tempDescription"
+                type="text"
+                placeholder="Enter description..."
+                class="w-full px-4 py-2 border border-[var(--bg-lighter)] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div class="flex gap-2 mt-2">
+                <button
+                  @click="saveTaskDescription(task)"
+                  class="flex-grow bg-[var(--accent-light)] py-2 rounded-full hover:bg-[var(--accent-light)]/80 cursor-pointer transition"
+                >
+                  Save
+                </button>
+                <button
+                  @click="cancelEditingDesc"
+                  class="flex-grow bg-[var(--bg-lighter)] py-2 rounded-full hover:bg-[var(--bg-lighter)]/80 cursor-pointer transition"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Description box -->
-          <div v-if="editingDescId === task.id" class="mt-3 flex gap-2">
-            <input
-              v-model="tempDescription"
-              type="text"
-              placeholder="Enter description..."
-              class="flex-grow px-4 py-2 border border-[var(--bg-lighter)] rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div class="flex justify-between items-center mt-4">
             <button
-              @click="saveTaskDescription(task)"
-              class="bg-[var(--accent-light)] px-4 py-2 rounded-full hover:bg-[var(--accent-light)]/80 cursor-pointer transition"
+              @click="startEditingDesc(task)"
+              class="text-blue-500 hover:text-blue-700 font-semibold cursor-pointer text-sm"
             >
-              Save
+              Edit description
             </button>
             <button
-              @click="cancelEditingDesc"
-              class="bg-[var(--bg-lighter)] px-4 py-2 rounded-full hover:bg-[var(--bg-lighter)]/80 cursor-pointer transition"
+              @click="deleteTask(task.id)"
+              class="text-red-500 hover:text-red-700 font-semibold cursor-pointer text-sm"
             >
-              Cancel
+              Delete
             </button>
           </div>
-
-          <p v-else-if="task.description" class="mt-2 text-gray-600">
-            {{ task.description }}
-          </p>
-
-          <p v-if="task.createdAt" class="text-xs text-gray-400 mt-1">
-            Created at: {{ formatDate(task.createdAt) }}
-          </p>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +110,13 @@ const tempDescription = ref('')
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr)
-  return date.toLocaleString()
+  return date.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 async function fetchTasks() {
